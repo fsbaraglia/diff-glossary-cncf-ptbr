@@ -1,4 +1,4 @@
-name: Check diff main/dev-pt
+name: Check diff main/dev-it
 
 on:
   push:
@@ -16,11 +16,11 @@ jobs:
       - name: Execute the diff
         run: |
             git clone -b main https://github.com/cncf/glossary.git upstream
-            git clone -b dev-pt https://github.com/cncf/glossary.git dev-pt
+            git clone -b dev-it https://github.com/cncf/glossary.git dev-it
             echo "Updated files: "
-            diff --brief -r upstream/content/en dev-pt/content/pt-br | grep differ | awk '/content/ {print $2}' > update-diff.md
+            diff --brief -r upstream/content/en dev-it/content/it | grep differ | awk '/content/ {print $2}' > update-diff.md
             echo "Files that exists only in main:"
-            diff --brief -r upstream/content/en dev-pt/content/pt-br | grep "Only in upstream/content/en" | cut -d" " -f3-4 > new-diff.md
+            diff --brief -r upstream/content/en dev-it/content/it | grep "Only in upstream/content/en" | cut -d" " -f3-4 > new-diff.md
     
       - name: Setup input- update
         id: update
@@ -39,7 +39,7 @@ jobs:
           NEW_FILES="${NEW_FILES//$'\n'/'%0A'}"
           NEW_FILES="${NEW_FILES//$'\r'/'%0D'}"
           echo "::set-output name=newFiles::$NEW_FILES"
-      - uses: JasonEtco/create-an-issue@v2
+      - uses: fsbaraglia/create-an-issue@v2
         with:
           filename: .github/ISSUE_TEMPLATE.md
         env:
